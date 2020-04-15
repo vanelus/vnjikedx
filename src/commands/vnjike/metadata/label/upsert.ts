@@ -1,8 +1,8 @@
 import {  flags, SfdxCommand } from '@salesforce/command';
 import { Messages} from '@salesforce/core';
 import { AnyJson } from '@salesforce/ts-types';
-import { fsExtra} from 'fs-extra';
 import { createTmpDir } from '../../../../utils/createTmpDir';
+const fse = require('fs-extra');
 const compressing = require('compressing');
 const fs = require('fs');
 
@@ -100,12 +100,8 @@ export default class Upsert extends SfdxCommand {
       }
 
       // delete tempory directory & file
-      fsExtra.remove(tmpDir).then(() => {
-        fs.unlinkSync(zipFile);
-      }).catch(err => {
-        console.log(err);
-      });
-
+      fse.removeSync(tmpDir);
+      fs.unlinkSync(zipFile);
       console.log('label deployment finished!');
     } catch (err) {
       this.ux.errorJson(err);

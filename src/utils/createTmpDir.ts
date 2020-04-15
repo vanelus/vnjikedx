@@ -1,4 +1,4 @@
-import { mkdirSync } from 'fs';
+const fse = require('fs-extra');
 
 /***
  * Create a temp dir
@@ -6,9 +6,10 @@ import { mkdirSync } from 'fs';
 export function createTmpDir() {
     const currentTimeStamp = Date.now();
     const randomDigit = Math.floor(Math.random() * 10);
-    const dirName = 'C:\\Temp\\sfdx_guimini_' + currentTimeStamp + randomDigit;
+    const currentDir = process.cwd();
+    const dirName = currentDir  + currentTimeStamp + randomDigit;
 
-    mkdirSync(dirName);
+    fse.mkdirpSync(dirName);
 
     return dirName;
 
