@@ -4,5 +4,8 @@
   "forceFlagDescription": "example boolean flag",
   "errorNoOrgResults": "No results found for the org '%s'.",
   "targetlabelname": "custom label api name.",
-  "targetlabelvalue": "custom label value."
+  "targetlabelvalue": "custom label value.",
+  "backupDescription": "export all data from production orgs",
+  "targetdirectory": "target directory where data files are exported",
+  "targetusername": "username or alias of  prod environnement"
 }

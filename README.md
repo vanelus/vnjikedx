@@ -22,7 +22,7 @@ $ npm install -g vnjikedx
 $ sfdx COMMAND
 running command...
 $ sfdx (-v|--version|version)
-vnjikedx/0.0.0 win32-x64 node-v12.13.0
+vnjikedx/0.0.2 win32-x64 node-v16.16.0
 $ sfdx --help [COMMAND]
 USAGE
   $ sfdx COMMAND
