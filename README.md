@@ -22,7 +22,7 @@ $ npm install -g vnjikedx
 $ sfdx COMMAND
 running command...
 $ sfdx (-v|--version|version)
-vnjikedx/0.0.2 win32-x64 node-v16.16.0
+vnjikedx/0.0.3 win32-x64 node-v16.16.0
 $ sfdx --help [COMMAND]
 USAGE
   $ sfdx COMMAND
@@ -30,7 +30,38 @@ USAGE
 ```
 <!-- usagestop -->
 <!-- commands -->
+* [`sfdx vnjike:data:backup -d <string> [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-vnjikedatabackup--d-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 * [`sfdx vnjike:metadata:label:upsert -n <string> -v <string> [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-vnjikemetadatalabelupsert--n-string--v-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
+
+## `sfdx vnjike:data:backup -d <string> [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
+
+export all data from production orgs
+
+```
+USAGE
+  $ sfdx vnjike:data:backup -d <string> [-u <string>] [--apiversion <string>] [--json] [--loglevel 
+  trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
+
+OPTIONS
+  -d, --targetdirectory=targetdirectory                                             (required) target directory where
+                                                                                    data files are exported
+
+  -u, --targetusername=targetusername                                               username or alias for the target
+                                                                                    org; overrides default target org
+
+  --apiversion=apiversion                                                           override the api version used for
+                                                                                    api requests made by this command
+
+  --json                                                                            format output as json
+
+  --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)  [default: warn] logging level for
+                                                                                    this command invocation
+
+EXAMPLE
+  $ vnjike:data:backup --targetusername myOrg@example.com --targetdirectory "$HOME"
+```
+
+_See code: [lib/commands/vnjike/data/backup.js](https://github.com/vanelus/vnjikedx/blob/v0.0.3/lib/commands/vnjike/data/backup.js)_
 
 ## `sfdx vnjike:metadata:label:upsert -n <string> -v <string> [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
@@ -38,8 +69,8 @@ insert or update a custom label in scratch/sandbox orgs
 
 ```
 USAGE
-  $ sfdx vnjike:metadata:label:upsert -n <string> -v <string> [-u <string>] [--apiversion <string>] [--json] [--loglevel 
-  trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
+  $ sfdx vnjike:metadata:label:upsert -n <string> -v <string> [-u <string>] [--apiversion <string>] [--json] [--loglevel
+   trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
 
 OPTIONS
   -n, --targetlabelname=targetlabelname                                             (required) custom label api name.
@@ -60,10 +91,10 @@ OPTIONS
 EXAMPLE
   $ vnjike:metadata:label:upsert --targetusername myOrg@example.com --targetlabelname "apiname" --targetlabelvalue 
   "value"
-       $ vnjike:metadata:label:upsert -u myOrg@example.com -n "apiname" -v "value"
+      $ vnjike:metadata:label:upsert -u myOrg@example.com -n "apiname" -v "value"
 ```
 
-_See code: [lib\commands\vnjike\metadata\label\upsert.js](https://github.com/vanelus/vnjikedx/blob/v0.0.0/lib\commands\vnjike\metadata\label\upsert.js)_
+_See code: [lib/commands/vnjike/metadata/label/upsert.js](https://github.com/vanelus/vnjikedx/blob/v0.0.3/lib/commands/vnjike/metadata/label/upsert.js)_
 <!-- commandsstop -->
 <!-- debugging-your-plugin -->
 # Debugging your plugin

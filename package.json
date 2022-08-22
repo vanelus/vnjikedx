@@ -1,7 +1,7 @@
 {
   "name": "vnjikedx",
   "description": "essential tools for CLI",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "author": "vnjike",
   "bugs": "https://github.com/vanelus/vnjikedx/issues",
   "dependencies": {
