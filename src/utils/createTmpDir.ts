@@ -1,16 +1,16 @@
-const fse = require('fs-extra');
+import gracefulFs from 'graceful-fs';
+import * as path from 'path';
 
 /***
  * Create a temp dir
  */
-export function createTmpDir() {
+export function createTmpDir(): string {
     const currentTimeStamp = Date.now();
     const randomDigit = Math.floor(Math.random() * 10);
     const currentDir = process.cwd();
-    const dirName = currentDir  + currentTimeStamp + randomDigit;
+    const dirName = path.join(currentDir, `${currentTimeStamp}${randomDigit}`);
 
-    fse.mkdirpSync(dirName);
+    gracefulFs.mkdirSync(dirName, { recursive: true });
 
     return dirName;
-
 }

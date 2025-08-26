@@ -1,112 +1,104 @@
-import { flags, SfdxCommand } from '@salesforce/command';
+import { Flags } from '@oclif/core';
+import { SfCommand, Flags as SfFlags } from '@salesforce/sf-plugins-core';
 import { Messages } from '@salesforce/core';
 import { AnyJson } from '@salesforce/ts-types';
-const fs = require('fs');
-const https = require('https');
-const request = require('request');
-const { JSDOM } = require('jsdom');
-const jquery = require('jquery');
+import gracefulFs from 'graceful-fs';
+import * as https from 'https';
+import got from 'got';
+import { JSDOM } from 'jsdom';
+import jquery from 'jquery';
+import path from 'path';
 
 // Initialize Messages with the current plugin directory
+const __dirname = path.resolve();
 Messages.importMessagesDirectory(__dirname);
 
 // Load the specific messages for this file. Messages from @salesforce/command, @salesforce/core,
 // or any library that is using the messages framework can also be loaded this way.
 const messages = Messages.loadMessages('vnjikedx', 'org');
 
-export default class backup extends SfdxCommand {
-  public static description = messages.getMessage('backupDescription');
+export default class VnjikeDataBackup extends SfCommand<AnyJson> {
+  public static readonly summary = messages.getMessage('backupDescription');
+  public static readonly description = messages.getMessage('backupDescription');
 
-  public static examples = [
-    `$ vnjike:data:backup --targetusername myOrg@example.com --targetdirectory "$HOME" `
+  public static readonly examples = [
+    `<%= config.bin %> <%= command.id %> --target-org myOrg@example.com --target-directory "$HOME"`
   ];
 
-  public static args = [{ name: 'file' }];
-
-  protected static flagsConfig = {
-    targetdirectory: flags.string({
-      required: true,
+  public static readonly flags = {
+    'target-org': SfFlags.requiredOrg(),
+    'target-directory': Flags.string({
+      summary: messages.getMessage('targetdirectory'),
       char: 'd',
-      description: messages.getMessage('targetdirectory')
-    })
+      required: true,
+    }),
   };
 
-  // Comment this out if your command does not require an org username
-  protected static requiresUsername = true;
-
-  // Comment this out if your command does not support a hub org username
-  protected static supportsDevhubUsername = false;
-
-  // Set this to true if your command requires a project workspace; 'requiresProject' is false by default
-  protected static requiresProject = false;
-
   public async run(): Promise<AnyJson> {
+    const { flags } = await this.parse(VnjikeDataBackup);
+    
     // evaluate entries
-    const targetdirectory = this.flags.targetdirectory;
+    const targetdirectory = flags['target-directory'];
 
-    // this.org is guaranteed because requiresUsername=true, as opposed to supportsUsername
-    const conn = this.org.getConnection();
+    // Get the org connection
+    const conn = flags['target-org'].getConnection();
 
     try {
       const EXPORT_DATA_URL = '/ui/setup/export/DataExportPage/d';
       const DOWNLOAD_URL = '/servlet/servlet.OrgExport';
       const exportDataURL = conn.instanceUrl + EXPORT_DATA_URL;
       const sessionCookie = `sid=${conn.accessToken};`;
-      const ORG_ID = this.org.getOrgId();
-      const downloadFile = function (url, cookie, index, cb) {
+      const ORG_ID = flags['target-org'].getOrgId();
+      const downloadFile = function (url: string, cookie: string, index: number, cb: () => void): void {
         console.log(`${(new Date()).toISOString()} ## Downloading file: ${url} ...`);
 
         //use http() instead of request() (see https://stackoverflow.com/questions/62919127/node-issue-with-request-pipe-and-large-files-error-cannot-create-a-string-lo)
         //request() has a bus regarding large files (Data Export ZIP files weight up to 512 MB)
-        let writeStream = fs.createWriteStream(`${targetdirectory}\\backup_${ORG_ID}_${index}.zip`);
+        let writeStream = gracefulFs.createWriteStream(`${targetdirectory}\\backup_${ORG_ID}_${index}.zip`);
         https.get(url,
           {
-            gzip: true,
             headers: { Cookie: cookie }
           }
-          , function (response) {
+          , function (response: any) {
             response.pipe(writeStream);
             writeStream.on('finish', function () {
               console.log(`${(new Date()).toISOString()} ## File downloaded.`);
               return cb();
             });
-            writeStream.on('error', function (err) {
+            writeStream.on('error', function (err: any) {
               console.error(err);
               return 1;
             });
           })
-          .on('error', function (err) {
+          .on('error', function (err: any) {
             console.error(err);
             return 1;
           })
           .end();
       };
 
-      const finalCallback = function () {
+      const finalCallback = function (): void {
         console.log(`\n\n${(new Date()).toISOString()} ## Data Export completed.`);
         //return 0;
       }
 
-      const createCallback = function (url, sessionCookie, index, cb) {
+      const createCallback = function (url: string, sessionCookie: string, index: number, cb: () => void): () => void {
         return function () {
           downloadFile(url, sessionCookie, index, cb);
         }
       };
 
       console.log(`${(new Date()).toISOString()} ## Inspecting Export Data wizard landing page...`);
-      request({
-        method: 'GET',
-        url: exportDataURL,
-        headers: { Cookie: sessionCookie }
-      }, (err, res, body) => {
-        if (err) {
-          console.error(err);
-          return 1;
-        }
+      
+      try {
+        const response = await got(exportDataURL, {
+          headers: { Cookie: sessionCookie }
+        });
+        
         console.log(`${(new Date()).toISOString()} ## Export Data page inspected.`);
 
-        const { window } = new JSDOM(body);
-        const $ = jquery(window);
+        const { window } = new JSDOM(response.body);
+        const $ = jquery(window) as any;
 
         let callbacks = [finalCallback];
 
@@ -121,17 +113,20 @@ export default class backup extends SfdxCommand {
 
         if (callbacks.length < 2) {
           console.error('No link found: check if export data is available at ' + exportDataURL);
-          return 1;
+          return { orgId: flags['target-org'].getOrgId(), outputString: 'error' };
         }
 
-        return callbacks[callbacks.length - 1]();
-      });
+        callbacks[callbacks.length - 1]();
+      } catch (gotErr: any) {
+        console.error('Error fetching export data page:', gotErr.message);
+        throw new Error(`Failed to fetch export page: ${gotErr.message}`);
+      }
 
-    } catch (err) {
-      this.ux.errorJson(err);
+    } catch (err: any) {
+      throw new Error(`Backup failed: ${err?.message || 'Unknown error'}`);
     }
 
     // Return an object to be displayed with --json
-    return { orgId: this.org.getOrgId(), outputString: 'success' };
+    return { orgId: flags['target-org'].getOrgId(), outputString: 'success' };
   }
 }

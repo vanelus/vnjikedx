@@ -1,10 +1,10 @@
 {
-  "commandDescription": "insert or update a custom label in scratch/sandbox orgs",
+  "commandDescription": "insert or update custom labels in scratch/sandbox orgs",
   "nameFlagDescription": "name to print",
   "forceFlagDescription": "example boolean flag",
   "errorNoOrgResults": "No results found for the org '%s'.",
-  "targetlabelname": "custom label api name.",
-  "targetlabelvalue": "custom label value.",
+  "targetlabelname": "custom label api name(s). Comma-separated for multiple labels.",
+  "targetlabelvalue": "custom label value(s). Use 'label1:value1,label2:value2' format for multiple labels.",
   "backupDescription": "export all data from production orgs",
   "targetdirectory": "target directory where data files are exported",
   "targetusername": "username or alias of  prod environnement"

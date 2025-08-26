@@ -1,122 +1,145 @@
-vnjikedx
-========
+# vnjikedx
 
-essential tools for CLI
+Essential tools for Salesforce CLI v2
 
 [![Version](https://img.shields.io/npm/v/vnjikedx.svg)](https://npmjs.org/package/vnjikedx)
-[![CircleCI](https://circleci.com/gh/vanelus/vnjikedx/tree/master.svg?style=shield)](https://circleci.com/gh/vanelus/vnjikedx/tree/master)
-[![Appveyor CI](https://ci.appveyor.com/api/projects/status/github/vanelus/vnjikedx?branch=master&svg=true)](https://ci.appveyor.com/project/heroku/vnjikedx/branch/master)
-[![Codecov](https://codecov.io/gh/vanelus/vnjikedx/branch/master/graph/badge.svg)](https://codecov.io/gh/vanelus/vnjikedx)
-[![Greenkeeper](https://badges.greenkeeper.io/vanelus/vnjikedx.svg)](https://greenkeeper.io/)
-[![Known Vulnerabilities](https://snyk.io/test/github/vanelus/vnjikedx/badge.svg)](https://snyk.io/test/github/vanelus/vnjikedx)
 [![Downloads/week](https://img.shields.io/npm/dw/vnjikedx.svg)](https://npmjs.org/package/vnjikedx)
 [![License](https://img.shields.io/npm/l/vnjikedx.svg)](https://github.com/vanelus/vnjikedx/blob/master/package.json)
 
 <!-- toc -->
-* [Debugging your plugin](#debugging-your-plugin)
+* [vnjikedx](#vnjikedx)
+* [Usage](#usage)
+* [Commands](#commands)
 <!-- tocstop -->
-<!-- install -->
+
+# Usage
 <!-- usage -->
 ```sh-session
 $ npm install -g vnjikedx
-$ sfdx COMMAND
+$ sf COMMAND
 running command...
-$ sfdx (-v|--version|version)
-vnjikedx/0.0.3 win32-x64 node-v16.16.0
-$ sfdx --help [COMMAND]
+$ sf (--version)
+vnjikedx/1.0.0 win32-x64 node-v20.18.0
+$ sf --help [COMMAND]
 USAGE
-  $ sfdx COMMAND
+  $ sf COMMAND
 ...
 ```
 <!-- usagestop -->
-<!-- commands -->
-* [`sfdx vnjike:data:backup -d <string> [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-vnjikedatabackup--d-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
-* [`sfdx vnjike:metadata:label:upsert -n <string> -v <string> [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-vnjikemetadatalabelupsert--n-string--v-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 
-## `sfdx vnjike:data:backup -d <string> [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
+# Commands
+<!-- commands -->
+* [`sf vnjike data backup`](#sf-vnjike-data-backup)
+* [`sf vnjike metadata label upsert`](#sf-vnjike-metadata-label-upsert)
+
+## `sf vnjike data backup`
 
 export all data from production orgs
 
 ```
 USAGE
-  $ sfdx vnjike:data:backup -d <string> [-u <string>] [--apiversion <string>] [--json] [--loglevel 
-  trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
+  $ sf vnjike data backup -o <value> -d <value> [--json] [--flags-dir <value>]
 
-OPTIONS
-  -d, --targetdirectory=targetdirectory                                             (required) target directory where
-                                                                                    data files are exported
+FLAGS
+  -d, --target-directory=<value>  (required) target directory where data files are exported
+  -o, --target-org=<value>        (required) Username or alias of the target org. Not required if the `target-org`
+                                  configuration variable is already set.
 
-  -u, --targetusername=targetusername                                               username or alias for the target
-                                                                                    org; overrides default target org
+GLOBAL FLAGS
+  --flags-dir=<value>  Import flag values from a directory.
+  --json               Format output as json.
 
-  --apiversion=apiversion                                                           override the api version used for
-                                                                                    api requests made by this command
+DESCRIPTION
+  export all data from production orgs
 
-  --json                                                                            format output as json
+  export all data from production orgs
 
-  --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)  [default: warn] logging level for
-                                                                                    this command invocation
-
-EXAMPLE
-  $ vnjike:data:backup --targetusername myOrg@example.com --targetdirectory "$HOME"
+EXAMPLES
+  $ sf vnjike data backup --target-org myOrg@example.com --target-directory "$HOME"
 ```
 
-_See code: [lib/commands/vnjike/data/backup.js](https://github.com/vanelus/vnjikedx/blob/v0.0.3/lib/commands/vnjike/data/backup.js)_
+_See code: [src/commands/vnjike/data/backup.ts](https://github.com/vanelus/vnjikedx/blob/v1.0.0/src/commands/vnjike/data/backup.ts)_
 
-## `sfdx vnjike:metadata:label:upsert -n <string> -v <string> [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
+## `sf vnjike metadata label upsert`
 
-insert or update a custom label in scratch/sandbox orgs
+insert or update custom labels in scratch/sandbox orgs
 
 ```
 USAGE
-  $ sfdx vnjike:metadata:label:upsert -n <string> -v <string> [-u <string>] [--apiversion <string>] [--json] [--loglevel
-   trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
+  $ sf vnjike metadata label upsert -o <value> -n <value> -v <value> [--json] [--flags-dir <value>]
 
-OPTIONS
-  -n, --targetlabelname=targetlabelname                                             (required) custom label api name.
+FLAGS
+  -n, --target-label-name=<value>   (required) custom label api name(s). Comma-separated for multiple labels.
+  -o, --target-org=<value>          (required) Username or alias of the target org. Not required if the `target-org`
+                                    configuration variable is already set.
+  -v, --target-label-value=<value>  (required) custom label value(s). Use 'label1:value1,label2:value2' format for
+                                    multiple labels.
 
-  -u, --targetusername=targetusername                                               username or alias for the target
-                                                                                    org; overrides default target org
+GLOBAL FLAGS
+  --flags-dir=<value>  Import flag values from a directory.
+  --json               Format output as json.
 
-  -v, --targetlabelvalue=targetlabelvalue                                           (required) custom label value.
+DESCRIPTION
+  insert or update custom labels in scratch/sandbox orgs
 
-  --apiversion=apiversion                                                           override the api version used for
-                                                                                    api requests made by this command
+  insert or update custom labels in scratch/sandbox orgs
 
-  --json                                                                            format output as json
+EXAMPLES
+  $ sf vnjike metadata label upsert --target-org myOrg@example.com --target-label-name "apiname" --target-label-value "value"
 
-  --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)  [default: warn] logging level for
-                                                                                    this command invocation
+  $ sf vnjike metadata label upsert -o myOrg@example.com -n "apiname" -v "value"
 
-EXAMPLE
-  $ vnjike:metadata:label:upsert --targetusername myOrg@example.com --targetlabelname "apiname" --targetlabelvalue 
-  "value"
-      $ vnjike:metadata:label:upsert -u myOrg@example.com -n "apiname" -v "value"
+FLAG DESCRIPTIONS
+  -n, --target-label-name=<value>  custom label api name(s). Comma-separated for multiple labels.
+
+    custom label api name(s). Comma-separated for multiple labels.
+
+  -v, --target-label-value=<value>
+
+    custom label value(s). Use 'label1:value1,label2:value2' format for multiple labels.
+
+    custom label value(s). Use 'label1:value1,label2:value2' format for multiple labels.
 ```
 
-_See code: [lib/commands/vnjike/metadata/label/upsert.js](https://github.com/vanelus/vnjikedx/blob/v0.0.3/lib/commands/vnjike/metadata/label/upsert.js)_
+_See code: [src/commands/vnjike/metadata/label/upsert.ts](https://github.com/vanelus/vnjikedx/blob/v1.0.0/src/commands/vnjike/metadata/label/upsert.ts)_
 <!-- commandsstop -->
-<!-- debugging-your-plugin -->
-# Debugging your plugin
-We recommend using the Visual Studio Code (VS Code) IDE for your plugin development. Included in the `.vscode` directory of this plugin is a `launch.json` config file, which allows you to attach a debugger to the node process when running your commands.
 
-To debug the `hello:org` command: 
-1. Start the inspector
-  
-If you linked your plugin to the sfdx cli, call your command with the `dev-suspend` switch: 
-```sh-session
-$ sfdx hello:org -u myOrg@example.com --dev-suspend
-```
-  
-Alternatively, to call your command using the `bin/run` script, set the `NODE_OPTIONS` environment variable to `--inspect-brk` when starting the debugger:
-```sh-session
-$ NODE_OPTIONS=--inspect-brk bin/run hello:org -u myOrg@example.com
+## Installation
+
+```bash
+sf plugins install vnjikedx
 ```
 
-2. Set some breakpoints in your command code
-3. Click on the Debug icon in the Activity Bar on the side of VS Code to open up the Debug view.
-4. In the upper left hand corner of VS Code, verify that the "Attach to Remote" launch configuration has been chosen.
-5. Hit the green play button to the left of the "Attach to Remote" launch configuration window. The debugger should now be suspended on the first line of the program. 
-6. Hit the green play button at the top middle of VS Code (this play button will be to the right of the play button that you clicked in step #5).
-<br><img src=".images/vscodeScreenshot.png" width="480" height="278"><br>
-Congrats, you are debugging!
+## Development
+
+This plugin has been modernized for SF CLI v2 with the following major changes:
+
+### Key Changes Made:
+
+1. **Updated Dependencies**: 
+   - Upgraded from `@salesforce/command` to `@salesforce/sf-plugins-core`
+   - Updated `@oclif/core` to version 3+
+   - Updated `@salesforce/core` to version 6+
+
+2. **Command Structure**:
+   - Changed from `SfdxCommand` to `SfCommand`
+   - Updated flag definitions to use modern SF CLI patterns
+   - Changed from `--targetusername` to `--target-org`
+   - Updated command examples to use `sf` instead of `sfdx`
+
+3. **TypeScript Modernization**:
+   - Added proper TypeScript types for all parameters
+   - Improved error handling with typed catch blocks
+   - Updated import statements for better module compatibility
+
+4. **CLI Integration**:
+   - Updated `package.json` to target SF CLI v2
+   - Changed binary from `sfdx` to `sf`
+   - Updated topic structure for better command organization
+
+### Commands Available:
+
+- `sf vnjike data backup`: Export all data from production orgs
+- `sf vnjike metadata label upsert`: Insert or update custom labels in orgs
+
+The plugin maintains full backward functionality while being compatible with the modern SF CLI v2 architecture.

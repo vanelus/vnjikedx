@@ -1,0 +1,1 @@
+{"root":["./src/index.ts","./src/commands/vnjike/data/backup.ts","./src/commands/vnjike/metadata/label/upsert.ts","./src/utils/createtmpdir.ts"],"version":"5.9.2"}

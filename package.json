@@ -1,39 +1,52 @@
 {
   "name": "vnjikedx",
   "description": "essential tools for CLI",
-  "version": "0.0.3",
+  "version": "1.0.0",
   "author": "vnjike",
+  "type": "module",
   "bugs": "https://github.com/vanelus/vnjikedx/issues",
   "dependencies": {
-    "@oclif/command": "^1.8.16",
-    "@oclif/config": "^1.18.3",
-    "@oclif/errors": "^1",
-    "@salesforce/command": "^5",
-    "@salesforce/core": "^2.37.1",
+    "@oclif/core": "^3",
+    "@salesforce/core": "^6",
+    "@salesforce/sf-plugins-core": "^8",
+    "chalk": "^5.6.0",
+    "change-case": "^5.4.4",
     "compressing": "^1.6.2",
-    "fs-extra": "^10.1.0",
-    "jquery": "^3.6.0",
-    "jsdom": "^20.0.0",
+    "got": "^14.4.7",
+    "graceful-fs": "^4.2.11",
+    "jquery": "^3.7.0",
+    "jsdom": "^23",
+    "open": "^10.2.0",
     "tslib": "^2"
   },
   "devDependencies": {
-    "@oclif/dev-cli": "^1",
-    "@oclif/plugin-help": "^5",
-    "@oclif/test": "^2",
-    "@salesforce/dev-config": "3.1.0",
+    "@oclif/plugin-help": "^6",
+    "@oclif/test": "^3",
+    "@salesforce/dev-config": "^4",
+    "@salesforce/plugin-command-reference": "^3",
     "@types/chai": "^4",
-    "@types/mocha": "^9",
-    "@types/node": "^18",
-    "chai": "^4",
-    "globby": "^11",
+    "@types/fs-extra": "^11.0.4",
+    "@types/graceful-fs": "^4.1.9",
+    "@types/jquery": "^3.5.33",
+    "@types/jsdom": "^21.1.7",
+    "@types/mocha": "^10",
+    "@types/node": "^20",
+    "@typescript-eslint/eslint-plugin": "^8.41.0",
+    "@typescript-eslint/parser": "^8.41.0",
+    "chai": "^4.5.0",
+    "eslint": "^8",
+    "globby": "^13",
     "mocha": "^10",
     "nyc": "^15",
-    "rimraf": "^3.0.2",
+    "oclif": "^4",
+    "prettier": "^3",
+    "rimraf": "^5",
+    "sinon": "^21.0.0",
     "ts-node": "^10",
-    "tslint": "^5"
+    "typescript": "^5"
   },
   "engines": {
-    "node": ">=8.0.0"
+    "node": ">=18.0.0"
   },
   "files": [
     "/lib",
@@ -48,10 +61,24 @@
   "license": "MIT",
   "oclif": {
     "commands": "./lib/commands",
-    "bin": "sfdx",
+    "bin": "sf",
+    "topicSeparator": " ",
     "topics": {
-      "hello": {
-        "description": "Commands to say hello."
+      "vnjike": {
+        "description": "Essential tools for SF CLI.",
+        "subtopics": {
+          "data": {
+            "description": "Data management commands."
+          },
+          "metadata": {
+            "description": "Metadata management commands.",
+            "subtopics": {
+              "label": {
+                "description": "Custom label management commands."
+              }
+            }
+          }
+        }
       }
     },
     "devPlugins": [
@@ -60,10 +87,15 @@
   },
   "repository": "vanelus/vnjikedx",
   "scripts": {
+    "build": "tsc -b",
+    "clean": "rimraf lib && rimraf coverage && rimraf .nyc_output",
+    "compile": "tsc -b",
+    "format": "prettier --write \"**/*.{ts,js,json,md}\"",
+    "lint": "eslint src/**/*.ts test/**/*.ts",
     "postpack": "rimraf oclif.manifest.json",
-    "posttest": "tslint -p test -t stylish",
-    "prepack": "rimraf lib && tsc -b && oclif-dev manifest && oclif-dev readme",
+    "prepack": "npm run build && oclif manifest && oclif readme",
     "test": "nyc --extension .ts mocha --forbid-only \"test/**/*.test.ts\"",
-    "version": "oclif-dev readme && git add README.md"
+    "test:nuts": "nyc mocha \"**/*.nut.ts\" --slow 4500 --timeout 600000 --parallel",
+    "version": "oclif readme"
   }
 }
