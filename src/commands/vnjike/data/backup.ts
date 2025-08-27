@@ -7,10 +7,13 @@ import * as https from 'https';
 import got from 'got';
 import { JSDOM } from 'jsdom';
 import jquery from 'jquery';
-import path from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 // Initialize Messages with the current plugin directory
-const __dirname = path.resolve();
 Messages.importMessagesDirectory(__dirname);
 
 // Load the specific messages for this file. Messages from @salesforce/command, @salesforce/core,

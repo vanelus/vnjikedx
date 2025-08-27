@@ -52,8 +52,6 @@ GLOBAL FLAGS
 DESCRIPTION
   export all data from production orgs
 
-  export all data from production orgs
-
 EXAMPLES
   $ sf vnjike data backup --target-org myOrg@example.com --target-directory "$HOME"
 ```
@@ -82,8 +80,6 @@ GLOBAL FLAGS
 DESCRIPTION
   insert or update custom labels in scratch/sandbox orgs
 
-  insert or update custom labels in scratch/sandbox orgs
-
 EXAMPLES
   $ sf vnjike metadata label upsert --target-org myOrg@example.com --target-label-name "apiname" --target-label-value "value"
 
@@ -92,11 +88,7 @@ EXAMPLES
 FLAG DESCRIPTIONS
   -n, --target-label-name=<value>  custom label api name(s). Comma-separated for multiple labels.
 
-    custom label api name(s). Comma-separated for multiple labels.
-
   -v, --target-label-value=<value>
-
-    custom label value(s). Use 'label1:value1,label2:value2' format for multiple labels.
 
     custom label value(s). Use 'label1:value1,label2:value2' format for multiple labels.
 ```
