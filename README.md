@@ -135,3 +135,7 @@ This plugin has been modernized for SF CLI v2 with the following major changes:
 - `sf vnjike metadata label upsert`: Insert or update custom labels in orgs
 
 The plugin maintains full backward functionality while being compatible with the modern SF CLI v2 architecture.
+
+## Acknowledgments
+
+This plugin was inspired by the excellent work done in [sf-automatic-data-export-script](https://github.com/enreeco/sf-automatic-data-export-script) by @enreeco. The core data export functionality builds upon the concepts and techniques demonstrated in that repository.
