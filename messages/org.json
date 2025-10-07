@@ -5,7 +5,9 @@
   "errorNoOrgResults": "No results found for the org '%s'.",
   "targetlabelname": "custom label api name(s). Comma-separated for multiple labels.",
   "targetlabelvalue": "custom label value(s). Use 'label1:value1,label2:value2' format for multiple labels.",
-  "backupDescription": "export all data from production orgs",
-  "targetdirectory": "target directory where data files are exported",
-  "targetusername": "username or alias of  prod environnement"
+  "backupSummary": "export all data from production orgs with configurable download delays",
+  "backupDescription": "Automatically exports all available data from Salesforce production orgs by scraping the Data Export page and downloading all generated ZIP files. This command handles Salesforce's data export limitations by supporting configurable delays between downloads. It inspects the Export Data wizard landing page, extracts download links, and sequentially downloads all backup files to a specified directory. Files are named with the org ID and an incremental index (backup_ORGID_1.zip, backup_ORGID_2.zip, etc.). The first file downloads immediately, while subsequent files respect the configured wait delay to comply with Salesforce rate limiting.",
+  "targetdirectory": "target directory where backup ZIP files will be saved (files named as backup_ORGID_N.zip)",
+  "targetusername": "username or alias of  prod environnement",
+  "waitDelay": "wait delay in seconds between file downloads (starts from 2nd file). Use 30-60 seconds for large orgs to avoid Salesforce rate limits. Default: 0 (no delay)"
 }
