@@ -19,7 +19,7 @@ $ npm install -g vnjikedx
 $ sf COMMAND
 running command...
 $ sf (--version)
-vnjikedx/1.0.0 win32-x64 node-v20.18.0
+vnjikedx/1.1.0 win32-x64 node-v20.18.0
 $ sf --help [COMMAND]
 USAGE
   $ sf COMMAND
@@ -34,29 +34,49 @@ USAGE
 
 ## `sf vnjike data backup`
 
-export all data from production orgs
+export all data from production orgs with configurable download delays
 
 ```
 USAGE
-  $ sf vnjike data backup -o <value> -d <value> [--json] [--flags-dir <value>]
+  $ sf vnjike data backup -o <value> -d <value> [--json] [--flags-dir <value>] [-w <value>]
 
 FLAGS
-  -d, --target-directory=<value>  (required) target directory where data files are exported
+  -d, --target-directory=<value>  (required) target directory where backup ZIP files will be saved (files named as
+                                  backup_ORGID_N.zip)
   -o, --target-org=<value>        (required) Username or alias of the target org. Not required if the `target-org`
                                   configuration variable is already set.
+  -w, --wait-delay=<value>        wait delay in seconds between file downloads (starts from 2nd file). Use 30-60 seconds
+                                  for large orgs to avoid Salesforce rate limits. Default: 0 (no delay)
 
 GLOBAL FLAGS
   --flags-dir=<value>  Import flag values from a directory.
   --json               Format output as json.
 
 DESCRIPTION
-  export all data from production orgs
+  export all data from production orgs with configurable download delays
+
+  Automatically exports all available data from Salesforce production orgs by scraping the Data Export page and
+  downloading all generated ZIP files. This command handles Salesforce's data export limitations by supporting
+  configurable delays between downloads. It inspects the Export Data wizard landing page, extracts download links, and
+  sequentially downloads all backup files to a specified directory. Files are named with the org ID and an incremental
+  index (backup_ORGID_1.zip, backup_ORGID_2.zip, etc.). The first file downloads immediately, while subsequent files
+  respect the configured wait delay to comply with Salesforce rate limiting.
 
 EXAMPLES
-  $ sf vnjike data backup --target-org myOrg@example.com --target-directory "$HOME"
+  # Export data immediately without delays
+
+    $ sf vnjike data backup --target-org myOrg@example.com --target-directory "$HOME"
+
+  # Export data with 30-second delay between downloads (recommended for large orgs)
+
+    $ sf vnjike data backup --target-org myOrg@example.com --target-directory "$HOME" --wait-delay 30
+
+  # Export using short flags
+
+    $ sf vnjike data backup -o prodOrg -d "/path/to/backups" -w 60
 ```
 
-_See code: [src/commands/vnjike/data/backup.ts](https://github.com/vanelus/vnjikedx/blob/v1.0.0/src/commands/vnjike/data/backup.ts)_
+_See code: [src/commands/vnjike/data/backup.ts](https://github.com/vanelus/vnjikedx/blob/v1.1.0/src/commands/vnjike/data/backup.ts)_
 
 ## `sf vnjike metadata label upsert`
 
@@ -93,7 +113,7 @@ FLAG DESCRIPTIONS
     custom label value(s). Use 'label1:value1,label2:value2' format for multiple labels.
 ```
 
-_See code: [src/commands/vnjike/metadata/label/upsert.ts](https://github.com/vanelus/vnjikedx/blob/v1.0.0/src/commands/vnjike/metadata/label/upsert.ts)_
+_See code: [src/commands/vnjike/metadata/label/upsert.ts](https://github.com/vanelus/vnjikedx/blob/v1.1.0/src/commands/vnjike/metadata/label/upsert.ts)_
 <!-- commandsstop -->
 
 ## Installation
